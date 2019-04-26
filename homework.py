@@ -22,7 +22,6 @@ def task_1_add_new_record_to_db(con) -> None:
     con.commit()
 
 
-
 def task_2_list_all_customers(cur) -> list:
     """
     Get all records from table Customers
@@ -68,7 +67,15 @@ def task_5_delete_the_last_customer(con) -> None:
     Args:
         con: psycopg connection
     """
-    pass
+    cur = con.cursor()
+    cur.execute('''
+                DELETE FROM customers 
+                WHERE customerid = (SELECT customerid 
+                                    FROM customers 
+                                    ORDER BY customerid 
+                                    DESC LIMIT 1)
+            ''')
+    con.commit()
 
 
 def task_6_list_all_supplier_countries(cur) -> list:
@@ -78,7 +85,8 @@ def task_6_list_all_supplier_countries(cur) -> list:
         cur: psycopg cursor
     Returns: 29 records
     """
-    pass
+    cur.execute("SELECT Country FROM Suppliers")
+    return cur.fetchall()
 
 
 def task_7_list_supplier_countries_in_desc_order(cur) -> list:
@@ -88,7 +96,8 @@ def task_7_list_supplier_countries_in_desc_order(cur) -> list:
         cur: psycopg cursor
     Returns: 29 records in descending order
     """
-    pass
+    cur.execute("SELECT Country FROM Suppliers ORDER BY country DESC")
+    return cur.fetchall()
 
 
 def task_8_count_customers_by_city(cur):
