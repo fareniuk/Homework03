@@ -130,6 +130,7 @@ def task_10_list_first_10_customers(cur):
     cur.execute("SELECT * FROM customers LIMIT 10")
     return cur.fetchall()
 
+
 def task_11_list_customers_starting_from_11th(cur):
     """
     List all customers starting from 11th record
@@ -137,7 +138,8 @@ def task_11_list_customers_starting_from_11th(cur):
         cur: psycopg cursor
     Returns: 11 records
     """
-    pass
+    cur.execute("SELECT * FROM customers OFFSET 11")
+    return cur.fetchall()
 
 
 def task_12_list_suppliers_from_specified_countries(cur):
@@ -147,7 +149,10 @@ def task_12_list_suppliers_from_specified_countries(cur):
         cur: psycopg cursor
     Returns: 8 records
     """
-    pass
+    cur.execute('''SELECT SupplierId, SupplierName, ContactName, City, Country FROM Suppliers 
+                                                                                WHERE Country 
+                                                                                IN ('USA', 'UK', 'Japan')''')
+    return cur.fetchall()
 
 
 def task_13_list_products_from_sweden_suppliers(cur):
@@ -157,7 +162,10 @@ def task_13_list_products_from_sweden_suppliers(cur):
         cur: psycopg cursor
     Returns: 3 records
     """
-    pass
+    cur.execute('''SELECT Products.ProductName FROM Products
+                            JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID
+                            WHERE Suppliers.Country = 'Sweden' ''')
+    return cur.fetchall()
 
 
 def task_14_list_products_with_supplier_information(cur):
