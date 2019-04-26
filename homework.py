@@ -181,7 +181,7 @@ def task_15_list_customers_with_any_order_or_not(cur):
     Returns: 213 records
     """
     cur.execute('''SELECT CustomerName, ContactName, Country, OrderId FROM Customers
-                   JOIN Orders ON Customers.CustomerID = Orders.CustomerID''')
+                   LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID''')
     return cur.fetchall()
 
 
