@@ -107,7 +107,8 @@ def task_8_count_customers_by_city(cur):
         cur: psycopg cursor
     Returns: 69 records in descending order
     """
-    pass
+    cur.execute("SELECT COUNT(CustomerID), City FROM Customers GROUP BY City")
+    return cur.fetchall()
 
 
 def task_9_count_customers_by_country_with_than_10_customers(cur):
@@ -117,7 +118,8 @@ def task_9_count_customers_by_country_with_than_10_customers(cur):
         cur: psycopg cursor
     Returns: 3 records
     """
-    pass
+    cur.execute("SELECT COUNT(customerid), country FROM customers GROUP BY country HAVING COUNT(customerid) > 10")
+    return cur.fetchall()
 
 
 def task_10_list_first_10_customers(cur):
@@ -125,8 +127,8 @@ def task_10_list_first_10_customers(cur):
     List first 10 customers from the table
     Results: 10 records
     """
-    pass
-
+    cur.execute("SELECT * FROM customers LIMIT 10")
+    return cur.fetchall()
 
 def task_11_list_customers_starting_from_11th(cur):
     """
