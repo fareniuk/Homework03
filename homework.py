@@ -18,7 +18,7 @@ def task_1_add_new_record_to_db(con) -> None:
     """
     cur = con.cursor()
     cur.execute('''INSERT INTO Customers(CustomerName, ContactName, Address, City, PostalCode, Country) 
-                VALUES ('Thomas', 'David', 'Some Address',  'London', '774', 'Singapore')''')
+                   VALUES ('Thomas', 'David', 'Some Address',  'London', '774', 'Singapore')''')
     con.commit()
 
 
@@ -53,11 +53,9 @@ def task_4_update_customer(con):
     """
     cur = con.cursor()
     cur.execute('''UPDATE Customers 
-                           SET CustomerName = 'Johnny Depp' 
-                           WHERE CustomerID = (SELECT CustomerID 
-                                               FROM Customers
-                                               ORDER BY CustomerID
-                                               LIMIT 1)''')
+                   SET CustomerName = 'Johnny Depp' 
+                   WHERE CustomerID = (SELECT CustomerID FROM Customers
+                                       ORDER BY CustomerID LIMIT 1)''')
     con.commit()
 
 
@@ -68,13 +66,9 @@ def task_5_delete_the_last_customer(con) -> None:
         con: psycopg connection
     """
     cur = con.cursor()
-    cur.execute('''
-                DELETE FROM customers 
-                WHERE customerid = (SELECT customerid 
-                                    FROM customers 
-                                    ORDER BY customerid 
-                                    DESC LIMIT 1)
-            ''')
+    cur.execute('''DELETE FROM customers 
+                   WHERE customerid = (SELECT customerid FROM customers 
+                                       ORDER BY customerid DESC LIMIT 1)''')
     con.commit()
 
 
@@ -150,8 +144,7 @@ def task_12_list_suppliers_from_specified_countries(cur):
     Returns: 8 records
     """
     cur.execute('''SELECT SupplierId, SupplierName, ContactName, City, Country FROM Suppliers 
-                                                                                WHERE Country 
-                                                                                IN ('USA', 'UK', 'Japan')''')
+                   WHERE Country IN ('USA', 'UK', 'Japan')''')
     return cur.fetchall()
 
 
@@ -162,9 +155,9 @@ def task_13_list_products_from_sweden_suppliers(cur):
         cur: psycopg cursor
     Returns: 3 records
     """
-    cur.execute('''SELECT Products.ProductName FROM Products
-                            JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID
-                            WHERE Suppliers.Country = 'Sweden' ''')
+    cur.execute('''SELECT ProductName FROM Products
+                   JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID
+                   WHERE Suppliers.Country = 'Sweden' ''')
     return cur.fetchall()
 
 
@@ -175,7 +168,9 @@ def task_14_list_products_with_supplier_information(cur):
         cur: psycopg cursor
     Returns: 77 records
     """
-    pass
+    cur.execute('''SELECT ProductId, ProductName, Unit, Price, Country, City, SupplierName FROM Products
+                   JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID''')
+    return cur.fetchall()
 
 
 def task_15_list_customers_with_any_order_or_not(cur):
@@ -185,7 +180,9 @@ def task_15_list_customers_with_any_order_or_not(cur):
         cur: psycopg cursor
     Returns: 213 records
     """
-    pass
+    cur.execute('''SELECT CustomerName, ContactName, Country, OrderId FROM Customers
+                   JOIN Orders ON Customers.CustomerID = Orders.CustomerID''')
+    return cur.fetchall()
 
 
 def task_16_match_all_customers_and_suppliers_by_country(cur):
@@ -195,4 +192,8 @@ def task_16_match_all_customers_and_suppliers_by_country(cur):
         cur: psycopg cursor
     Returns: 194 records
     """
-    pass
+    cur.execute('''SELECT Customers.CustomerName, Customers.Address, Customers.Country customerCountry, 
+                          Suppliers.Country supplierCountry, Suppliers.SupplierName FROM Customers 
+                   FULL JOIN Suppliers ON Customers.Country = Suppliers.Country
+                   ORDER BY customerCountry, supplierCountry''')
+    return cur.fetchall()
